@@ -1,12 +1,6 @@
 ---
 name: walkthrough
 description: Generates a self-contained HTML file with an interactive, clickable Mermaid diagram (flowchart or ER diagram) that explains how a SPECIFIC codebase feature, flow, architecture, or database schema works. Designed for fast onboarding — each walkthrough is a visual mental model readable in under 2 minutes. Use when asked to walkthrough, explain a flow, trace a code path, show how something works, explain the architecture, or visualize a database schema/data model. DO NOT use for general project exploration or broad codebase discovery — this skill is for targeted explanation of specific features, not exploratory analysis.
-compatibility: Designed for Claude Code (or similar products). Requires a browser to open generated HTML files.
-allowed-tools: Bash Read Write Glob Grep Task
-metadata:
-  author: Alexander Opalic (original)
-  author: Youpen-y (editor)
-  version: "1.0"
 ---
 
 # Codebase Walkthrough Generator
