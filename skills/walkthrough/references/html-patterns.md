@@ -12,7 +12,7 @@ Reference for generating interactive walkthrough HTML files using React (UMD) + 
 
 ## Design Principles
 
-1. **Always dark mode** — Black bg, white text, purple accents. Set `<html style="color-scheme: dark">`, `<body class="bg-wt-bg">`. The `color-scheme: dark` on `<html>` is **mandatory** — scrollbars, form controls, and system UI all depend on it.
+1. **Always dark mode** — Black bg, white text, purple accents. Set `<html color-scheme: dark>`, `<body bg-wt-bg>`
 2. **Quick mental model** — Readable in <2 min, not a code reference
 3. **TL;DR first** — Summary card above diagram
 4. **Full-size diagram** — Mermaid at natural size, never squished
@@ -40,11 +40,10 @@ Reference for generating interactive walkthrough HTML files using React (UMD) + 
 | Type | Fill | Stroke | Text |
 |------|------|--------|------|
 | component | `#a855f7` | `#c084fc` | white |
-| composable | `#7c3aed` | `#a78bfa` | white |
-| utility | `#6d28d9` | `#8b5cf6` | white |
+| utility | `#3b82f6` | `#60a5fa` | white |
 | external | `#525252` | `#737373` | white |
-| event | `#d8b4fe` | `#e9d5ff` | black |
-| data | `#9333ea` | `#a855f7` | white |
+| event | `#06b6d4` | `#22d3ee` | black |
+| data | `#10b981` | `#34d399` | white |
 
 ### Tailwind Config Block
 
@@ -58,8 +57,8 @@ Reference for generating interactive walkthrough HTML files using React (UMD) + 
         accent: '#a855f7', file: '#c084fc', red: '#ef4444',
       },
       node: {
-        component: '#a855f7', composable: '#7c3aed', utility: '#6d28d9',
-        external: '#525252', event: '#d8b4fe', data: '#9333ea',
+        component: '#a855f7', utility: '#3b82f6',
+        external: '#525252', event: '#06b6d4', data: '#10b981',
       },
     }}},
   };
@@ -70,11 +69,10 @@ Reference for generating interactive walkthrough HTML files using React (UMD) + 
 
 ```
 classDef component fill:#a855f7,stroke:#c084fc,color:#fff
-classDef composable fill:#7c3aed,stroke:#a78bfa,color:#fff
-classDef utility fill:#6d28d9,stroke:#8b5cf6,color:#fff
+classDef utility fill:#3b82f6,stroke:#60a5fa,color:#fff
 classDef external fill:#525252,stroke:#737373,color:#fff
-classDef event fill:#d8b4fe,stroke:#e9d5ff,color:#000
-classDef data fill:#9333ea,stroke:#a855f7,color:#fff
+classDef event fill:#06b6d4,stroke:#22d3ee,color:#000
+classDef data fill:#10b981,stroke:#34d399,color:#fff
 ```
 
 ## CDN Dependencies
@@ -193,7 +191,7 @@ const NODES = {
 
 - `description`: plain text, rendered as `<p>` (not `dangerouslySetInnerHTML`)
 - `code`: **required** — every node must have a useful snippet (1-5 lines). Pick the most representative piece: a key function call, type definition, config, or core algorithm. Use template literals for multi-line.
-- `lang`: **required on EVERY node** — always set explicitly (e.g., `"typescript"`, `"javascript"`, `"vue"`, `"json"`). Never omit. If unsure, use `"typescript"`.
+- `lang`: required for every node (default `"typescript"`). Set explicitly for vue, json, css, etc.
 - `files`: array of `"path"` or `"path:lines"` strings
 
 ### LEGEND
@@ -223,14 +221,20 @@ App
 ├── Summary (TL;DR card below header)
 ├── DiagramViewport (full screen, pan/zoom via usePanZoom)
 │   └── MermaidDiagram (SVG into ref)
-├── ZoomControls (fixed bottom-left)
-├── Legend (fixed bottom-center)
-├── DetailPanel (fixed right, conditional)
+├── ZoomControls (fixed bottom-left, z-index: 150)
+├── Legend (fixed bottom-center, z-index: 110)
+├── DetailPanel (fixed right, z-index: 200, conditional)
 │   ├── Close (×), Title, Description (<p>)
 │   ├── CodeBlock (Shiki or fallback — every node has one)
 │   └── Files list
 └── KeyboardHint (fixed bottom-right)
 ```
+
+**IMPORTANT: z-index layering** — Ensure UI elements stack correctly:
+- Detail panel: `z-30` (200) — must be above everything
+- Zoom controls: `z-40` (150) — must be clickable, not blocked
+- Header: `z-10` (120) — title and summary
+- Legend: `z-20` (110) — color legend
 
 ### usePanZoom Hook
 
@@ -512,3 +516,12 @@ ReactDOM.createRoot(document.getElementById('root')).render(React.createElement(
 8. **Auto-fit on load** — `setTimeout(pz.fitToScreen, 600)` waits for Mermaid render
 9. **Node clicks vs pan** — check `e.target.closest('.node')` in pointerdown to let clicks through
 10. **Plain text descriptions** — use `description` (string) not `content` (HTML), render as `<p>`
+11. **z-index layering** — Detail panel (200) > Zoom controls (150) > Header (120) > Legend (110)
+12. **Node name mapping** — Create explicit `NODE_NAME_MAP` to handle Mermaid label → NODES key conversion:
+    ```js
+    const NODE_NAME_MAP = {
+        'Drawing Interaction': 'drawingInteraction',
+        'Canvas Renderer': 'canvasRenderer',
+        // ... ALL nodes must be mapped
+    };
+    ```
