@@ -1,9 +1,12 @@
 # Walkthrough
 
+**English** | [**中文**](./README.zh-CN.md) 
+
 A skill that generates interactive HTML walkthroughs with clickable Mermaid diagrams — flowcharts and ER diagrams — to explain codebase features, flows, architecture, and database schemas.
 
 Inspired by [Amp's Shareable Walkthroughs](https://ampcode.com/news/walkthrough).
-**[Live demo — walkthrough of the walkthrough skill itself](https://alexanderop.github.io/walkthrough/examples/walkthrough-how-it-works.html)**
+
+**[Live demo — walkthrough of the walkthrough skill itself](https://youpen-y.github.io/walkthrough/examples/walkthrough-how-it-works.html)**
 
 ## Usage
 Trigger the skill with prompts like:
